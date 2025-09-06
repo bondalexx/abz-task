@@ -1,0 +1,71 @@
+$brand: #f4e041;
+$brand-hover: #ffe302;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+}
+.more {
+  margin: 0 auto;
+  display: block;
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+.card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.name {
+  margin: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.meta {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.email {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.phone {
+  color: #7e7e7e;
+}
+
+.title {
+  text-align: center;
+  margin: 0px;
+}
+
+.more {
+  padding: 0 22px;
+  border-radius: 80px;
+  background: $brand;
+  color: #000;
+  text-decoration: none;
+  height: 34px;
+  border: none;
+  cursor: pointer;
+}
+
+.cta:hover {
+  background: $brand-hover;
+}

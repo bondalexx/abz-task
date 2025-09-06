@@ -1,0 +1,69 @@
+$brand: #f4e041;
+$brand-hover: #ffe302;
+
+.hero {
+  position: relative;
+  background: url("../../images/pexels-alexandr-podvalny-1227513.jpeg")
+    center/cover no-repeat;
+  min-height: 460px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  text-align: center;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.55) 35%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+.inner {
+  position: relative;
+  max-width: 740px;
+  padding: 48px 16px 64px;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 1.15;
+  margin: 0 0 20px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 auto 28px;
+  max-width: 640px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 500px;
+  background: $brand;
+  color: #000;
+  text-decoration: none;
+  height: 34px;
+}
+.cta:hover {
+  background: $brand-hover;
+}
+
+.description,
+.title {
+  max-width: 380px;
+}
+
+.title {
+  font-size: 42px;
+  line-height: 40px;
+}
