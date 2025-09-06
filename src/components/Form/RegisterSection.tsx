@@ -1,6 +1,5 @@
 import RegisterForm from "./RegisterForm";
 import { useResetUsersToFirstPage } from "../../hooks/useUsers";
-import styles from "./Form.module.scss";
 
 export default function RegisterSection() {
   const resetUsers = useResetUsersToFirstPage();

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,10 +10,10 @@ import styles from "./Form.module.scss";
 const schema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email(),
-  phone: z.string().min(6), // masked; normalize to +380XXXXXXXXX on submit
-  position_id: z.coerce.number().int(),
+  phone: z.string().min(6),
+  position_id: z.number().int(), // ← no z.coerce here
   photo: z
-    .instanceof(File, { message: "Please choose a JPG/JPEG file" }) // <-- put photo back
+    .instanceof(File, { message: "Please choose a JPG/JPEG file" })
     .refine(
       (f) => ["image/jpeg", "image/jpg"].includes(f.type),
       "Only JPEG/JPG is allowed"
@@ -154,7 +153,11 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           <legend className={styles.legend}>Select your position</legend>
           {positions?.positions?.map((p) => (
             <label key={p.id} className={styles.radio}>
-              <input type="radio" value={p.id} {...register("position_id")} />{" "}
+              <input
+                type="radio"
+                value={p.id}
+                {...register("position_id", { valueAsNumber: true })} // ← this is the key
+              />
               {p.name}
             </label>
           ))}
