@@ -3,9 +3,9 @@ import { api } from "./client";
 export type RegisterPayload = {
   name: string;
   email: string;
-  phone: string; // +380XXXXXXXXX
+  phone: string;
   position_id: number;
-  photo: File; // jpeg/jpg ≤ 5MB, ≥ 70x70px
+  photo: File;
 };
 
 export const registerUser = async (payload: RegisterPayload, token: string) => {

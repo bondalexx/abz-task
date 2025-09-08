@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers } from "../api/users";
 
-const PAGE_SIZE = 6; // as per task
+const PAGE_SIZE = 6;
 
 export function useUsers() {
   return useInfiniteQuery({
@@ -10,7 +10,7 @@ export function useUsers() {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.links.next_url) {
-        return lastPage.page + 1; // API is 1-based
+        return lastPage.page + 1;
       }
       return undefined;
     },

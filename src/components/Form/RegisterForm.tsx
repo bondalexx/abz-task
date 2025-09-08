@@ -3,15 +3,16 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePositions } from "../../hooks/usePositions";
 import { useRegister } from "../../hooks/useRegister";
-import { ensureImageConstraints } from "../utils/image"; // <-- fixed path
-import { formatPhoneDisplay, toApiPhone } from "../utils/phone"; // <-- fixed path
+import { ensureImageConstraints } from "../utils/image";
+import { formatPhoneDisplay, toApiPhone } from "../utils/phone";
 import styles from "./Form.module.scss";
+import type { RegisterPayload } from "../../types/api";
 
 const schema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email(),
   phone: z.string().min(6),
-  position_id: z.number().int(), // ← no z.coerce here
+  position_id: z.number().int(),
   photo: z
     .instanceof(File, { message: "Please choose a JPG/JPEG file" })
     .refine(
@@ -42,8 +43,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
   const selectedFile = watch("photo") as unknown as File | undefined;
 
-  const onSubmit = async (values: FormValues) => {
-    // normalize phone to +380XXXXXXXXX
+  const onSubmit = async (values: FormValues): Promise<void> => {
     const apiPhone = toApiPhone(values.phone);
     if (!/^\+380\d{9}$/.test(apiPhone)) {
       setError("phone", {
@@ -53,27 +53,14 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       return;
     }
 
-    // double-check resolution
-    const ok = await ensureImageConstraints(values.photo, {
-      minWidth: 70,
-      minHeight: 70,
-    });
-    if (!ok) {
-      setError("photo", {
-        type: "validate",
-        message: "Minimum 70x70px required",
-      });
-      return;
-    }
-
     try {
       const res = await registerMutation.mutateAsync({
         name: values.name,
         email: values.email,
-        phone: apiPhone,
+        phone: toApiPhone(values.phone),
         position_id: values.position_id,
         photo: values.photo,
-      } as any);
+      } as RegisterPayload);
 
       if (res.success) {
         onSuccess();
@@ -87,10 +74,25 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         | undefined;
       if (fails) {
         Object.entries(fails).forEach(([k, v]) =>
-          setError(k as keyof FormValues, { type: "server", message: v[0] })
+          setError(k as keyof FormValues, {
+            type: "server",
+            message: v[0],
+          })
         );
       }
       alert(e?.response?.data?.message ?? "Registration failed");
+    }
+
+    const ok = await ensureImageConstraints(values.photo, {
+      minWidth: 70,
+      minHeight: 70,
+    });
+    if (!ok) {
+      setError("photo", {
+        type: "validate",
+        message: "Minimum 70x70px required",
+      });
+      return;
     }
   };
 
@@ -99,7 +101,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       <h2 className={styles.title}>Working with POST request</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        {/* Name */}
         <div className={styles.field}>
           <input
             className={styles.input}
@@ -111,7 +112,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           )}
         </div>
 
-        {/* Email */}
         <div className={styles.field}>
           <input
             className={styles.input}
@@ -123,7 +123,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           )}
         </div>
 
-        {/* Phone (masked) */}
         <div className={styles.field} style={{ marginBottom: 25 }}>
           <Controller
             name="phone"
@@ -148,7 +147,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           )}
         </div>
 
-        {/* Positions */}
         <fieldset className={styles.field}>
           <legend className={styles.legend}>Select your position</legend>
           {positions?.positions?.map((p) => (
@@ -156,7 +154,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
               <input
                 type="radio"
                 value={p.id}
-                {...register("position_id", { valueAsNumber: true })} // ← this is the key
+                {...register("position_id", { valueAsNumber: true })}
               />
               {p.name}
             </label>
@@ -166,7 +164,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           )}
         </fieldset>
 
-        {/* File input (custom single input) */}
         <div className={styles.field}>
           <div className={styles.fileRow}>
             <label

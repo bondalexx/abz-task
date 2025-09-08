@@ -25,3 +25,11 @@ export type PositionsResponse = {
   success: boolean;
   positions: { id: number; name: string }[];
 };
+
+export type RegisterPayload = {
+  name: string;
+  email: string;
+  phone: string;
+  position_id: number;
+  photo: File;
+};
